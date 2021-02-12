@@ -10,10 +10,13 @@ Dieses Projekt verwendet die Adafruit NeoPixel-Bibliothek, um einen 60-LED-NeoPi
 ## Features
 * Anzeige der Uhrzeit durch blaue Marker
 * Anzeige von Stundenmarkierungen
+* Helligkeitssensor wechselt zwischen Day & Night Modus
+* WebServer auf dem ESP zeigt die aktuelle Configuration & Urhzeit
 
 ## Geplante Features
 * Einstellen einer Alarmzeit
 * Die Alarmzeit wird durch eine rote Markierung zusätzlich zur Uhrzeit anzeigt
-* Helligkeitssensor der zwischen Day & Night Modus wechselt.
-* Rest API zum steuern / einstellen der Uhr per Smartphone
+* Rest / HTML API zum steuern / einstellen der Uhr per Smartphone
+* Dokumentation per Fritzing Hardware Beispiel
  
+ ![Hardware Beispiel](/doku/clock.jpg)
