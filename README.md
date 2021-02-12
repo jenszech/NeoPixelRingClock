@@ -2,7 +2,7 @@
 
 Dieses Projekt verwendet die Adafruit NeoPixel-Bibliothek, um einen 60-LED-NeoPixel-Ring als Uhr zu steuern.
 
-*Hardware erforderlich*
+## Erforderliche Hardware
 * 4 x Neo Pixel 1/4 Ringe (je 15 LEDs)
 * 1 x ESP8266-Modul. Ich benutze den WeMos D1 mini
 * 1 x LDR GL5528
