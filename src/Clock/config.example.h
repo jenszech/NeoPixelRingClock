@@ -5,10 +5,14 @@
 
 // NeoPixel defines
 #define PIN 4
-#define NUMPIXELS 60                 // Popular NeoPixel ring size
-#define _PIXEL_UPDATE_INTERVAL 500   // Time (in milliseconds) to pause between pixels
+#define NUMPIXELS 60 // Popular NeoPixel ring size
+#define _PIXEL_UPDATE_INTERVAL 500 // Time (in milliseconds) to pause between pixels
 
-// Time defines
-#define _resyncSeconds 15*60        // How often to resync the time from NTP to TimeLib
-#define _ntpUpdateIntervall 12*60*60  // NTP Update Intervall
-#define _ntpTimeOffset 2*60*60      // NTP Timezone offset
+// How often to resync the time (under normal and error conditions)
+#define _resyncSeconds 15*60
+#define _ntpUpdateIntervall 12*60*60
+#define _ntpTimeOffset 1*60*60
+
+// LDR Setting
+#define _LDR_PIN A0
+#define _LDR_TRESHHOLD 20
