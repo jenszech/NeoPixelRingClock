@@ -1,12 +1,12 @@
 /*
   Project: WS2812 Ring LED clock with NTP server using ESP32
-  Board: ESP32 Dev Module (Node32 Lite)
+  Board: Wemos D1 Mini 
   
   Connections:
   ESP32 | OLED Strip
     RAW - VCC
     GND - GND
-     25 - DIN
+      4 - DIN
   
   External libraries:
   - NeoPixelBus by Micheal C. Miller V2.5.7 (Manager)
@@ -33,10 +33,18 @@
 // See Arduino Playground for details of this useful time synchronisation library
 #include <TimeLib.h>
 
+// Include NeoPixel Lib
 #include <Adafruit_NeoPixel.h>
+
+// Include WebServer Lib
+#include <ESP8266WebServer.h>
+#include <FS.h> // muss vor <detail\RequestHandlersImpl.h> stehen (s. Hinweis im Anschluss)
+#include <EspHtmlTemplateProcessor.h>
 
 
 WiFiUDP ntpUDP;
+ESP8266WebServer webserver(80);
+EspHtmlTemplateProcessor templateProcessor(&webserver);
 NTPClient timeClient(ntpUDP);
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
@@ -56,6 +64,7 @@ void setup() {
   setupOTA();
   setupNTP();
   setupNeoPixel();
+  setupWebServer();
 }
 
 long currentMillis = 0;
@@ -76,6 +85,7 @@ void loop() {
     serialLdrLog();
   }
 
+  loopWebServer();
   loopOTA();
   delay(_PIXEL_UPDATE_INTERVAL); // Pause before next pass through loop
 }
@@ -125,6 +135,7 @@ void setupNTP() {
   Serial.println(timeClient.getFormattedTime());  
   Serial.print("TimeLib: ");
   serialTimeLog();
+  Serial.println(getTimeStr());
 }
 
 //-----------------------------------------------------------------------------
@@ -137,29 +148,33 @@ time_t updateTimeByNTP() {
   return timeClient.getEpochTime();
 }
 
-void serialTimeLog() {
-  // We'll grab the time so it doesn't change whilst we're printing it
+String getTimeStr() {
+  String timeStr ="";
   time_t t=now();
-
-  //Now print all the elements of the time secure that it won't change under our feet
-  printDigits(hour(t));
-  Serial.print(":");
-  printDigits(minute(t));
-  Serial.print(":");
-  printDigits(second(t));
-  Serial.print("    ");
-  printDigits(day(t));
-  Serial.print("/");
-  printDigits(month(t));
-  Serial.print("/");
-  printDigits(year(t));
-  Serial.println();
+  
+  timeStr += printDigits(hour(t));
+  timeStr += ":";
+  timeStr += printDigits(minute(t));
+  timeStr += ":";
+  timeStr += printDigits(second(t));
+  timeStr += " ";
+  timeStr += printDigits(day(t));
+  timeStr += ".";
+  timeStr += printDigits(month(t));
+  timeStr += ".";
+  timeStr += printDigits(year(t));
+  
+  return timeStr;
 }
 
-void printDigits(int digits) {
+void serialTimeLog() {
+  Serial.println(getTimeStr());
+}
+
+String printDigits(int digits) {
   // utility for digital clock display: prints leading 0
-  if (digits < 10) Serial.print('0');
-  Serial.print(digits);
+  if (digits < 10) return "0"+String(digits);
+  return String(digits);
 }
 
 //-----------------------------------------------------------------------------
@@ -233,6 +248,10 @@ bool isDark() {
   return (sensorValue < _LDR_TRESHHOLD);
 }
 
+int getLdrValue() {
+  return analogRead(_LDR_PIN);
+}
+
 void serialLdrLog() {
   int sensorValue = analogRead(_LDR_PIN); // read analog input pin 0
   
@@ -240,6 +259,86 @@ void serialLdrLog() {
   Serial.print(sensorValue, DEC);
   Serial.print(" => isDark: ");
   Serial.println(isDark());
+}
+
+
+//-----------------------------------------------------------------------------
+// WebServer Methods
+//-----------------------------------------------------------------------------
+// Create a new web server
+void setupWebServer()
+{
+  // Initialize file system.
+  if (!SPIFFS.begin()) { 
+    Serial.println("SPIFFS nicht initialisiert!");
+    while (1){ 
+      yield();
+    }
+  }
+  Serial.println("SPIFFS ok");
+
+  // Start Web Server
+  webserver.on("/", handleRootIndex);
+  webserver.on("/config.html", handleRootConfig);
+  //webserver.serveStatic("/", SPIFFS, "/index.html");
+  webserver.serveStatic("/config.html", SPIFFS, "/config.html");
+  webserver.onNotFound(notfoundPage);
+  webserver.begin();
+ 
+}
+
+
+// Handle 404
+void notfoundPage(){ 
+  Serial.println("GET not found");
+  webserver.send(404, "text/plain", "404: Not found"); 
+}
+
+// Listen for HTTP requests
+void loopWebServer(void){ 
+  webserver.handleClient(); 
+}
+
+void handleRootIndex() {
+  templateProcessor.processAndSend("/index.html", indexKeyProcessor);
+}
+void handleRootConfig() {
+  templateProcessor.processAndSend("/config.html", indexKeyProcessor);
+}
+
+
+String indexKeyProcessor(const String& var){
+  Serial.println(var);
+  if (var == "CLOCK"){
+    return getTimeStr();
+  }
+  else if (var == "SSID"){
+    return WiFi.SSID();
+  }
+  else if (var == "WLAN"){
+    return "online";
+  }
+  else if (var == "NTPTIME"){
+    return timeClient.getFormattedTime();
+  }
+  else if (var == "NTPOFFSET"){
+    return String(_ntpTimeOffset);
+  }
+  else if (var == "NTPUPDATE"){
+    return String(_ntpUpdateIntervall);
+  }
+  else if (var == "LIBTIME"){
+    return getTimeStr();
+  }
+  else if (var == "LDRVALUE"){
+    return String(getLdrValue());
+  }
+  else if (var == "LDRISDARK"){
+    return String(isDark());
+  }
+  else if (var == "LDRTRESHHOLD"){
+    return String(_LDR_TRESHHOLD);
+  }  
 }
 
 
