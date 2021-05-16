@@ -33,7 +33,19 @@ Für geplante Features und Änderungen siehe [CHANGELOG.md](https://github.com/j
 
 ## Hardware Layout
 
+Erstellt mit Fritzing https://fritzing.org/
 
+Erforderliche Fritzing Bibliotheken: https://github.com/adafruit/Fritzing-Library
+
+Layout dieses Projektes als Fritzing Datei: [HWLayout](https://github.com/jenszech/NeoPixelRingClock/blob/master/src/Layout/HWLayout.fzz)
+
+### Steckplatine
+
+![Steckplatine](./src/Layout/HWLayout_Steckplatine.png)
+
+### Schaltplan
+
+![Schaltplan](./src/Layout/HWLayout_Schaltplan.png)
 
 # Sonstiges
 
