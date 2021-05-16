@@ -1,7 +1,7 @@
 // WiFi specific defines
 #define _wifiTimeOutSeconds 15
-#define _ssid     "<YOUR WLAN SSID>"
-#define _password "<YOUT WLAN Password>"
+#define _mySsid     "<YOUR WLAN SSID>"
+#define _myPassword "<YOUT WLAN Password>"
 
 // NeoPixel defines
 #define PIN 4

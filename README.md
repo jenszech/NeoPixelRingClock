@@ -26,7 +26,23 @@ Für geplante Features und Änderungen siehe [CHANGELOG.md](https://github.com/j
 
 # Dokumentation
 
-##  Erforderliche Hardware
+## Software
+
+Enter `https://arduino.esp8266.com/stable/package_esp8266com_index.json` into *Additional Board Manager URLs* field. Open Boards Manager from Tools > Board menu and find *esp8266* platform and install Version 2.7.4
+
+### Erforderliche Bibliotheken
+
+Über Bibliotheksmanager installieren
+
+* NTPClient  - by Fabrice Weinberg - Version 3.2.0
+* Adafruit NeoPixel - by Adafruit - Version 1.1.7
+* WifiManager - by tzapu, tablatronix - Version 0.16.0
+* Time - by Michael Margolis - Version 1.6.0
+* EspHtmlTemplateProcessor - by Patrick Lapointe - Version 1.2.1
+
+## Hardware
+
+###  Erforderliche Teile
 
 * 4 x Neo Pixel 1/4 Ringe (je 15 LEDs)  [Link](https://de.aliexpress.com/item/4000102576864.html?spm=a2g0s.9042311.0.0.48fe4c4doc7WPP) 
 * 1 x ESP8266-Modul. Ich benutze den WeMos D1 mini
@@ -35,7 +51,7 @@ Für geplante Features und Änderungen siehe [CHANGELOG.md](https://github.com/j
 * 1 * 1000uF 10V Kondensator
 * 1 * 5V Netzteil >= 3A [Link1](https://www.amazon.de/gp/product/B01HRR9GY4/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&psc=1) [Link2](https://de.aliexpress.com/item/32803238789.html?spm=a2g0s.9042311.0.0.48fe4c4doc7WPP)
 
-## Hardware Layout
+### Hardware Layout
 
 Erstellt mit Fritzing https://fritzing.org/
 
@@ -43,11 +59,11 @@ Erforderliche Fritzing Bibliotheken: https://github.com/adafruit/Fritzing-Librar
 
 Layout dieses Projektes als Fritzing Datei: [HWLayout](https://github.com/jenszech/NeoPixelRingClock/blob/master/src/Layout/HWLayout.fzz)
 
-### Steckplatine
+#### Steckplatine
 
 ![Steckplatine](./src/Layout/HWLayout_Steckplatine.png)
 
-### Schaltplan
+#### Schaltplan
 
 ![Schaltplan](./src/Layout/HWLayout_Schaltplan.png)
 
