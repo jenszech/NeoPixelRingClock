@@ -7,6 +7,11 @@
 
 ## Changelog
 
+### 1.0.2
+
+* Umstellung auf VSCode
+* Auslagern der PixelSteuerung in eine eigene Klasse
+
 ### 1.0.1
 
 * Hardware Layout als Fritzing Entwurf hinzugefügt
