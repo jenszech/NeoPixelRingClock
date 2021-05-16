@@ -1,7 +1,7 @@
 # NeoPixelRingClock
 
 [![Release](https://img.shields.io/github/release/jenszech/NeoPixelRingClock.svg)](https://github.com/jenszech/NeoPixelRingClock/releases/latest)
-[![Issues](https://img.shields.io/github/issues/jenszech/homematic-js-xmlapi.svg)](https://github.com/jzech/NeoPixelRingClock/issues)
+[![Issues](https://img.shields.io/github/issues/jenszech/NeoPixelRingClock.svg)](https://github.com/jzech/NeoPixelRingClock/issues)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 Dieses Projekt verwendet die Adafruit NeoPixel-Bibliothek, um einen 60-LED-NeoPixel-Ring als Uhr zu steuern.
