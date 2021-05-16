@@ -40,6 +40,12 @@ Enter `https://arduino.esp8266.com/stable/package_esp8266com_index.json` into *A
 * Time - by Michael Margolis - Version 1.6.0
 * EspHtmlTemplateProcessor - by Patrick Lapointe - Version 1.2.1
 
+Manuell zu installieren
+
+* ESP8266FS - https://github.com/esp8266/arduino-esp8266fs-plugin
+
+Wenn der EPS8266FS erfolgreich installiert wurde, muss einmal im "Tools" Menü die Funktion "ESP8266 Sketch Data Upload" ausgeführt werden. Falles Probleme dabei gibt, vorher einmal die USB Verbindung zum EPS trennen und wieder anschließen.
+
 ## Hardware
 
 ###  Erforderliche Teile
