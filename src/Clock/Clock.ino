@@ -1,19 +1,7 @@
 /*
   Project: WS2812 Ring LED clock with NTP server using ESP32
   Board: Wemos D1 Mini 
-  
-  Connections:
-  ESP32 | OLED Strip
-    RAW - VCC
-    GND - GND
-      4 - DIN
-  
-  External libraries:
-  - NeoPixelBus by Micheal C. Miller V2.5.7 (Manager)
-  - NTPClient by Fabrice Weinberg V3.3.0 
-    https://github.com/arduino-libraries/NTPClient/blob/master/NTPClient.h   
-  - TimeLib by Paul Stoffregen
-    https://github.com/PaulStoffregen/Time
+  Author: jzech@gmx.de
  */
 
 #include <arduino.h>

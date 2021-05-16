@@ -33,12 +33,14 @@ Enter `https://arduino.esp8266.com/stable/package_esp8266com_index.json` into *A
 ### Erforderliche Bibliotheken
 
 Über Bibliotheksmanager installieren
-
 * NTPClient  - by Fabrice Weinberg - Version 3.2.0
 * Adafruit NeoPixel - by Adafruit - Version 1.1.7
 * WifiManager - by tzapu, tablatronix - Version 0.16.0
 * Time - by Michael Margolis - Version 1.6.0
+  - Beispiele unter TimeLib by Paul Stoffregen
+    https://github.com/PaulStoffregen/Time
 * EspHtmlTemplateProcessor - by Patrick Lapointe - Version 1.2.1
+* NeoPixelBus - by Micheal C. Miller - Version 2.5.7 
 
 Manuell zu installieren
 
