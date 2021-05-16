@@ -7,14 +7,17 @@
 
 ## Changelog
 
-### 0.1.1
+### 1.0.1
 
 * Hardware Layout als Fritzing Entwurf hinzugefügt
 * Lizenz Files & CodeOfConduct hinzugefügt
 
-### 0.1.0
+### 1.0.0
 
-* Erste lauffähige Version der Uhr mit Anbindung an den NTP Zeitserver
+* Erste lauffähige Version der Uhr
+* Anbindung an den NTP Zeitserver
+* OverTheAir Update implementiert
+* HTTP Interface mit Static HTML 
 
 ### 0.0.1
 
