@@ -10,9 +10,8 @@
 #include <TimeLib.h>
 
 
-NeoPixelLib::NeoPixelLib(uint16_t numPixel, uint8_t pin) {
-    neoPixelType t=NEO_GRB + NEO_KHZ800;
-    pixels(numPixel, pin, t);
+NeoPixelLib::NeoPixelLib(uint16_t numPixel, uint8_t pin) 
+  : pixels(numPixel, pin, NEO_GRB + NEO_KHZ800) {
 }
 
 void NeoPixelLib::setupNeoPixel() {
