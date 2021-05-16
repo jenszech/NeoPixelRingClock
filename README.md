@@ -11,10 +11,10 @@ Dieses Projekt verwendet die Adafruit NeoPixel-Bibliothek, um einen 60-LED-NeoPi
 
 
 ## Features
-* Anzeige der Uhrzeit durch blaue Marker
-* Anzeige von Stundenmarkierungen
+* Anzeige der Uhrzeit durch grüne LEDs
+* Anzeige von Stundenmarkierungen (weiße LEDs)
 * Helligkeitssensor wechselt zwischen Day & Night Modus
-* WebServer auf dem ESP zeigt die aktuelle Configuration & Urhzeit
+* WebServer auf dem ESP zeigt die aktuelle Configuration & Uhrzeit
 
 ## Geplante Features
 * Einstellen einer Alarmzeit

@@ -17,24 +17,19 @@
 #include <WiFiUdp.h>
 #include <NTPClient.h>
 #include <ArduinoOTA.h>
-
-// See Arduino Playground for details of this useful time synchronisation library
 #include <TimeLib.h>
-
-// Include NeoPixel Lib
-#include <Adafruit_NeoPixel.h>
 
 // Include WebServer Lib
 #include <ESP8266WebServer.h>
 #include <FS.h> // muss vor <detail\RequestHandlersImpl.h> stehen (s. Hinweis im Anschluss)
 #include <EspHtmlTemplateProcessor.h>
 
+#include "NeoPixelLib.h"
 
 WiFiUDP ntpUDP;
 ESP8266WebServer webserver(80);
 EspHtmlTemplateProcessor templateProcessor(&webserver);
 NTPClient timeClient(ntpUDP);
-Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 // forward declarations
 void serialTimeLog();
@@ -46,12 +41,15 @@ time_t updateTimeByNTP();
 //-----------------------------------------------------------------------------
 // MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN
 //-----------------------------------------------------------------------------
+
+NeoPixelLib neoPixel(NUM_PIXEL, PIN_PIXEL);
+
 void setup() {
   Serial.begin(115200);
   connectToWifi();
   setupOTA();
   setupNTP();
-  setupNeoPixel();
+  neoPixel.setupNeoPixel();
   setupWebServer();
 }
 
@@ -64,7 +62,7 @@ void loop() {
   isDarkMode = isDark();
   
   //Update NeoPixel Display
-  loopPixelUpdate();
+  neoPixel.loopPixelUpdate(isDarkMode);
 
   //Debug Output every 60sec.
   if (currentMillis - previousMillis > 60000) {
@@ -165,67 +163,6 @@ String printDigits(int digits) {
   return String(digits);
 }
 
-//-----------------------------------------------------------------------------
-// NeoPixel Methods
-//-----------------------------------------------------------------------------
-
-void setupNeoPixel() {
-  pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
-}
-
-void loopPixelUpdate() {
-  uint32_t cSecond = pixels.Color(0,  10, 0);
-  uint32_t cMinute = pixels.Color(0,  50, 0);
-  uint32_t cHour   = pixels.Color(0,  25, 0);
-  uint32_t cHourLR = pixels.Color(0,  5 , 0);
-  int hourNow, hourL, hourR;
-  if (isDarkMode) {
-    cMinute = pixels.Color(0,  5, 0);
-    cHour   = pixels.Color(0,  5, 0);
-    cHourLR = pixels.Color(0,  1 , 0);
-  }
- 
-  time_t t=now(); 
-  pixels.clear(); // Set all pixel colors to 'off'
-  clockSegments();
-
-  // Now print all the elements of the time 
-  hourNow = hour(t);
-  while (hourNow > 11) {
-      hourNow = hourNow - 12;
-  }
-  hourNow = (hourNow * 5) + (hourNow / 12);
-  hourL=hourNow-1;
-  hourR=hourNow+1;
-  if (hourR == 60) hourR = 0;
-  if (hourL == -1) hourL = 59;
-
-  pixels.setPixelColor(hourL, cHourLR);
-  pixels.setPixelColor(hourNow, cHour);
-  pixels.setPixelColor(hourR, cHourLR);
-  pixels.setPixelColor(minute(t), cMinute);
-  if (!isDarkMode) pixels.setPixelColor(second(t), cSecond);
-  pixels.show();   // Send the updated pixel colors to the hardware.
-}
-
-void clockSegments() {
-  uint32_t cWhiteDim = pixels.Color(5, 5, 5);
-  uint32_t cWhite = pixels.Color(20, 20, 20);
-
-  if (isDarkMode) {
-    for(int b=0; b<4; b++) { 
-      pixels.setPixelColor(b*15, cWhiteDim);
-    }
-  } else {
-    for(int b=0; b<12; b++) { 
-      pixels.setPixelColor(b*5, cWhiteDim);
-    }
-    for(int b=0; b<4; b++) { 
-      pixels.setPixelColor(b*15, cWhite);
-    }
-    
-  }
-}
 
 //-----------------------------------------------------------------------------
 // LDR Methods

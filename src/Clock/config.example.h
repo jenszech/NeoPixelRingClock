@@ -4,7 +4,7 @@
 #define _myPassword "<YOUT WLAN Password>"
 
 // NeoPixel defines
-#define PIN 4
+#define PIN_PIXEL 4
 #define NUMPIXELS 60 // Popular NeoPixel ring size
 #define _PIXEL_UPDATE_INTERVAL 500 // Time (in milliseconds) to pause between pixels
 
