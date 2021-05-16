@@ -13,10 +13,14 @@ class NeoPixelLib
   public:
     NeoPixelLib(uint16_t numPixel, uint8_t pin);
     void setupNeoPixel();
-    void loopPixelUpdate(int isDarkMode);
+    void loopPixelUpdate(bool isDarkMode);
   private:
     Adafruit_NeoPixel pixels;
-    void clockSegments(int isDarkMode);
+    bool _isDark;
+    void showClockSegments();
+    void showHourPixel(int hourNow);
+    void showMinutePixel(int minuteNow);
+    void showSecondPixel(int secondNow);
 };
 
 #endif
