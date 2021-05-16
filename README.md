@@ -60,6 +60,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 ## Authors
 
 - **Jens Zech** - *Project owner* - [GitHub Profil](https://github.com/jenszech)
+- Florian Adam - Contributor- [GitHub Profil](https://github.com/xfadam)
 
 See also the list of [contributors](https://github.com/jenszech/NeoPixelRingClock/contributors) who participated in this project.
 
