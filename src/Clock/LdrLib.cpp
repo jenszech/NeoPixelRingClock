@@ -7,9 +7,8 @@
 
 #include "Arduino.h"
 
-LdrLib::LdrLib(uint8_t pin, uint16_t threshold) {
-    _pin = pin;
-    _threshold = threshold;
+LdrLib::LdrLib(uint8_t pin, uint16_t threshold) 
+    : _pin(pin), _threshold(threshold) {
 }
 
 bool LdrLib::isDark() {

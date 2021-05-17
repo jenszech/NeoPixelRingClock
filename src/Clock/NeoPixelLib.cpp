@@ -18,14 +18,14 @@ const int I_HLR = 4;
 
 const uint32_t COLORS[2][5] = {
     {
-        ((uint32_t)20 << 16) | ((uint32_t)20 << 8) | 20,  //color for clock segemnts
+        ((uint32_t)20 << 16) | ((uint32_t)20 << 8) | 20,  //color for clock segments
         ((uint32_t)0 << 16) | ((uint32_t)10 << 8) | 0,    //color for second marker
         ((uint32_t)0 << 16) | ((uint32_t)50 << 8) | 0,    //color for minute marker
         ((uint32_t)0 << 16) | ((uint32_t)25 << 8) | 0,    //color for hour marker
         ((uint32_t)0 << 16) | ((uint32_t)5 << 8) | 0      //color for hour marker Left/Right
     },
     {
-        ((uint32_t)5 << 16) | ((uint32_t)5 << 8) | 5,  //color for clock segemnts
+        ((uint32_t)5 << 16) | ((uint32_t)5 << 8) | 5,  //color for clock segments
         ((uint32_t)0 << 16) | ((uint32_t)0 << 8) | 0,  //color for second marker
         ((uint32_t)0 << 16) | ((uint32_t)5 << 8) | 0,  //color for minute marker
         ((uint32_t)0 << 16) | ((uint32_t)5 << 8) | 0,  //color for hour marker

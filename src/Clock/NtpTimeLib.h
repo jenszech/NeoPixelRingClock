@@ -13,20 +13,21 @@
 #include "Arduino.h"
 
 class NtpTimeLib {
-   public:
-    NtpTimeLib(uint16_t timeOffset, uint16_t resyncSeconds, uint16_t updateIntervall, WiFiUDP ntpUDP);
+  public:
+    NtpTimeLib(uint16_t timeOffset, uint16_t resyncSeconds, uint16_t updateIntervall, WiFiUDP& ntpUDP);
     void setupNTP();
     String getTimeStr();
     String getNtpRawTimeStr();
     void printSerialLog();
-    time_t getNtpTime();
     
-   private:
+  private:
     NTPClient timeClient;
-    uint16_t _timeOffset;
+
     uint16_t _resyncSeconds;
     uint16_t _updateIntervall;
+
     String printDigits(int digits);
+    static time_t getNtpTime();
 };
 
 #endif

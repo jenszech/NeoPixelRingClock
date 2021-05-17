@@ -10,24 +10,20 @@
 
 #include "Arduino.h"
 
-NtpTimeLib::NtpTimeLib(uint16_t timeOffset, uint16_t resyncSeconds, uint16_t updateIntervall, WiFiUDP ntpUDP)
-    : timeClient(ntpUDP) {
-    _timeOffset = timeOffset;
-    _resyncSeconds = resyncSeconds;
-    _updateIntervall = updateIntervall;
+namespace {
+    NTPClient* timeClientPtr = nullptr;
+}
+
+NtpTimeLib::NtpTimeLib(uint16_t timeOffset, uint16_t resyncSeconds, uint16_t updateInterval, WiFiUDP& ntpUDP)
+    : timeClient(ntpUDP, timeOffset), _resyncSeconds(resyncSeconds), _updateIntervall(updateInterval){
+
+    timeClientPtr = &this->timeClient;
 }
 
 void NtpTimeLib::setupNTP() {
-    Serial.print("\nNTP startet with Offset: ");
-    Serial.println(_timeOffset);
-    timeClient.begin();
-    timeClient.setTimeOffset(_timeOffset);
     timeClient.setUpdateInterval(_updateIntervall);
     timeClient.update();
-    while (!timeClient.update()) {
-        timeClient.forceUpdate();
-    }
-    setSyncProvider(this->getNtpTime);
+    setSyncProvider(&NtpTimeLib::getNtpTime);
     setSyncInterval(_resyncSeconds);  // just for demo purposes!
     printSerialLog();
 }
@@ -65,7 +61,7 @@ void NtpTimeLib::printSerialLog() {
 // resync Method - get Time from NTPClient
 time_t NtpTimeLib::getNtpTime() {
     Serial.println("TimeLib resync");
-    return timeClient.getEpochTime();
+    return timeClientPtr->getEpochTime();
 }
 
 //-- PRIVATE FUNCTIONS ------------------------------------------

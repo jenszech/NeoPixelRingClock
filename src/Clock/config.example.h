@@ -1,7 +1,7 @@
 // WiFi specific defines
 #define _wifiTimeOutSeconds 15
 #define _mySsid     "<YOUR WLAN SSID>"
-#define _myPassword "<YOUT WLAN Password>"
+#define _myPassword "<YOUR WLAN Password>"
 
 // NeoPixel defines
 #define _PIXEL_PIN 4
@@ -10,7 +10,7 @@
 
 // How often to resync the time (under normal and error conditions)
 #define _NTP_RSYNC 15*60                // RSYNC intervall in seconds
-#define _NTP_UPDATE_INTERVALL 12*60*60  // ntp update intervall in seconds
+#define _NTP_UPDATE_INTERVAL 12*60*60  // ntp update intervall in seconds
 #define _NTP_OFFSET 1*60*60             // time offset in seconds
 
 // LDR Setting

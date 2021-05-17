@@ -37,7 +37,7 @@ EspHtmlTemplateProcessor templateProcessor(&webserver);
 
 NeoPixelLib neoPixel(_PIXEL_NUM, _PIXEL_PIN);
 LdrLib ldrSensor(_LDR_PIN,  _LDR_TRESHOLD);
-NtpTimeLib ntpTime(_NTP_OFFSET, _NTP_RSYNC, _NTP_UPDATE_INTERVALL, ntpUDP);
+NtpTimeLib ntpTime(_NTP_OFFSET, _NTP_RSYNC, _NTP_UPDATE_INTERVAL, ntpUDP);
 
 void setup() {
     Serial.begin(115200);
@@ -151,7 +151,7 @@ String indexKeyProcessor(const String& var) {
     } else if (var == "NTPOFFSET") {
         return String(_NTP_OFFSET);
     } else if (var == "NTPUPDATE") {
-        return String(_NTP_UPDATE_INTERVALL);
+        return String(_NTP_UPDATE_INTERVAL);
     } else if (var == "LIBTIME") {
         return ntpTime.getTimeStr();
     } else if (var == "LDRVALUE") {
