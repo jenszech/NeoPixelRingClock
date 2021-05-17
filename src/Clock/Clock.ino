@@ -25,6 +25,7 @@
 #include <EspHtmlTemplateProcessor.h>
 
 #include "NeoPixelLib.h"
+#include "LdrLib.h"
 
 WiFiUDP ntpUDP;
 ESP8266WebServer webserver(80);
@@ -42,7 +43,8 @@ time_t updateTimeByNTP();
 // MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN
 //-----------------------------------------------------------------------------
 
-NeoPixelLib neoPixel(NUM_PIXEL, PIN_PIXEL);
+NeoPixelLib neoPixel(_PIXEL_NUM, _PIXEL_PIN);
+LdrLib ldrSensor(_LDR_PIN,  _LDR_TRESHOLD);
 
 void setup() {
     Serial.begin(115200);
@@ -59,7 +61,7 @@ int isDarkMode = false;
 
 void loop() {
     currentMillis = millis();
-    isDarkMode = isDark();
+    isDarkMode = ldrSensor.isDark();
 
     //Update NeoPixel Display
     neoPixel.loopPixelUpdate(isDarkMode);
@@ -68,7 +70,7 @@ void loop() {
     if (currentMillis - previousMillis > 60000) {
         previousMillis = millis();
         serialTimeLog();
-        serialLdrLog();
+        ldrSensor.printSerialLog();
     }
 
     loopWebServer();
@@ -164,28 +166,6 @@ String printDigits(int digits) {
 }
 
 //-----------------------------------------------------------------------------
-// LDR Methods
-//-----------------------------------------------------------------------------
-
-bool isDark() {
-    int sensorValue = analogRead(_LDR_PIN);  // read analog input pin 0
-    return (sensorValue < _LDR_TRESHHOLD);
-}
-
-int getLdrValue() {
-    return analogRead(_LDR_PIN);
-}
-
-void serialLdrLog() {
-    int sensorValue = analogRead(_LDR_PIN);  // read analog input pin 0
-
-    Serial.print("LDR: ");
-    Serial.print(sensorValue, DEC);
-    Serial.print(" => isDark: ");
-    Serial.println(isDark());
-}
-
-//-----------------------------------------------------------------------------
 // WebServer Methods
 //-----------------------------------------------------------------------------
 // Create a new web server
@@ -243,11 +223,11 @@ String indexKeyProcessor(const String& var) {
     } else if (var == "LIBTIME") {
         return getTimeStr();
     } else if (var == "LDRVALUE") {
-        return String(getLdrValue());
+        return String(ldrSensor.getLdrValue());
     } else if (var == "LDRISDARK") {
-        return String(isDark());
+        return String(ldrSensor.isDark());
     } else if (var == "LDRTRESHHOLD") {
-        return String(_LDR_TRESHHOLD);
+        return String(_LDR_TRESHOLD);
     }
 }
 

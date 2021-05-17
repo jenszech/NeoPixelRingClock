@@ -7,6 +7,10 @@
 
 ## Changelog
 
+### 1.0.x
+
+* Auslagern des LdrSensors in eine eigene Klasse
+
 ### 1.0.2
 
 * Umstellung auf VSCode

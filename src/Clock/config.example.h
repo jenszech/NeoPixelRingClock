@@ -4,8 +4,8 @@
 #define _myPassword "<YOUT WLAN Password>"
 
 // NeoPixel defines
-#define PIN_PIXEL 4
-#define NUMPIXELS 60 // Popular NeoPixel ring size
+#define _PIXEL_PIN 4
+#define _PIXEL_NUM 60 // Popular NeoPixel ring size
 #define _PIXEL_UPDATE_INTERVAL 500 // Time (in milliseconds) to pause between pixels
 
 // How often to resync the time (under normal and error conditions)
@@ -15,4 +15,4 @@
 
 // LDR Setting
 #define _LDR_PIN A0
-#define _LDR_TRESHHOLD 20
+#define _LDR_TRESHOLD 20

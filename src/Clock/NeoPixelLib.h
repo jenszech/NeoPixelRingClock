@@ -5,16 +5,17 @@
 #ifndef NeoPixelLib_h
 #define NeoPixelLib_h
 
-#include "Arduino.h"
 #include <Adafruit_NeoPixel.h>
 
-class NeoPixelLib
-{
-  public:
+#include "Arduino.h"
+
+class NeoPixelLib {
+   public:
     NeoPixelLib(uint16_t numPixel, uint8_t pin);
     void setupNeoPixel();
     void loopPixelUpdate(bool isDarkMode);
-  private:
+
+   private:
     Adafruit_NeoPixel pixels;
     bool _isDark;
     void showClockSegments();
@@ -24,4 +25,3 @@ class NeoPixelLib
 };
 
 #endif
-
