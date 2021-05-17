@@ -6,8 +6,6 @@
 #ifndef LdrLib_h
 #define LdrLib_h
 
-#include <Adafruit_NeoPixel.h>
-
 #include "Arduino.h"
 
 class LdrLib {

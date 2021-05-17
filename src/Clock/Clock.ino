@@ -15,7 +15,6 @@
 
 // UDP library which is how we communicate with Time Server
 #include <ArduinoOTA.h>
-#include <NTPClient.h>
 #include <TimeLib.h>
 #include <WiFiUdp.h>
 
@@ -26,18 +25,11 @@
 
 #include "NeoPixelLib.h"
 #include "LdrLib.h"
+#include "NtpTimeLib.h"
 
 WiFiUDP ntpUDP;
 ESP8266WebServer webserver(80);
 EspHtmlTemplateProcessor templateProcessor(&webserver);
-NTPClient timeClient(ntpUDP);
-
-// forward declarations
-void serialTimeLog();
-void setupNTP();
-void setupNeoPixel();
-void displayBasicClock();
-time_t updateTimeByNTP();
 
 //-----------------------------------------------------------------------------
 // MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN
@@ -45,31 +37,29 @@ time_t updateTimeByNTP();
 
 NeoPixelLib neoPixel(_PIXEL_NUM, _PIXEL_PIN);
 LdrLib ldrSensor(_LDR_PIN,  _LDR_TRESHOLD);
+NtpTimeLib ntpTime(_NTP_OFFSET, _NTP_RSYNC, _NTP_UPDATE_INTERVALL, ntpUDP);
 
 void setup() {
     Serial.begin(115200);
     connectToWifi();
     setupOTA();
-    setupNTP();
+    ntpTime.setupNTP();
     neoPixel.setupNeoPixel();
     setupWebServer();
 }
 
 long currentMillis = 0;
-long previousMillis = 0;
-int isDarkMode = false;
+long lastLogMillis = 0;
 
 void loop() {
     currentMillis = millis();
-    isDarkMode = ldrSensor.isDark();
-
     //Update NeoPixel Display
-    neoPixel.loopPixelUpdate(isDarkMode);
+    neoPixel.loopPixelUpdate(ldrSensor.isDark());
 
     //Debug Output every 60sec.
-    if (currentMillis - previousMillis > 60000) {
-        previousMillis = millis();
-        serialTimeLog();
+    if (currentMillis - lastLogMillis > 60000) {
+        lastLogMillis = millis();
+        ntpTime.printSerialLog();
         ldrSensor.printSerialLog();
     }
 
@@ -105,64 +95,6 @@ void connectToWifi() {
 
     Serial.print("\nWiFi connected with (local) IP address of: ");
     Serial.println(WiFi.localIP());
-}
-
-void setupNTP() {
-    Serial.print("\nNTP startet with Offset: ");
-    Serial.println(_ntpTimeOffset);
-    timeClient.begin();
-    timeClient.setTimeOffset(_ntpTimeOffset);
-    timeClient.setUpdateInterval(_ntpUpdateIntervall);
-    timeClient.update();
-    while (!timeClient.update()) {
-        timeClient.forceUpdate();
-    }
-    setSyncProvider(updateTimeByNTP);
-    setSyncInterval(_resyncSeconds);  // just for demo purposes!
-    Serial.print("NTP Time: ");
-    Serial.println(timeClient.getFormattedTime());
-    Serial.print("TimeLib: ");
-    serialTimeLog();
-    Serial.println(getTimeStr());
-}
-
-//-----------------------------------------------------------------------------
-// TimeLib Functions
-//-----------------------------------------------------------------------------
-
-// resync Method - get Time from NTPClient
-time_t updateTimeByNTP() {
-    Serial.println("TimeLib resync");
-    return timeClient.getEpochTime();
-}
-
-String getTimeStr() {
-    String timeStr = "";
-    time_t t = now();
-
-    timeStr += printDigits(hour(t));
-    timeStr += ":";
-    timeStr += printDigits(minute(t));
-    timeStr += ":";
-    timeStr += printDigits(second(t));
-    timeStr += " ";
-    timeStr += printDigits(day(t));
-    timeStr += ".";
-    timeStr += printDigits(month(t));
-    timeStr += ".";
-    timeStr += printDigits(year(t));
-
-    return timeStr;
-}
-
-void serialTimeLog() {
-    Serial.println(getTimeStr());
-}
-
-String printDigits(int digits) {
-    // utility for digital clock display: prints leading 0
-    if (digits < 10) return "0" + String(digits);
-    return String(digits);
 }
 
 //-----------------------------------------------------------------------------
@@ -209,19 +141,19 @@ void handleRootConfig() {
 String indexKeyProcessor(const String& var) {
     Serial.println(var);
     if (var == "CLOCK") {
-        return getTimeStr();
+        return ntpTime.getTimeStr();
     } else if (var == "SSID") {
         return WiFi.SSID();
     } else if (var == "WLAN") {
         return "online";
     } else if (var == "NTPTIME") {
-        return timeClient.getFormattedTime();
+        return ntpTime.getNtpRawTimeStr();
     } else if (var == "NTPOFFSET") {
-        return String(_ntpTimeOffset);
+        return String(_NTP_OFFSET);
     } else if (var == "NTPUPDATE") {
-        return String(_ntpUpdateIntervall);
+        return String(_NTP_UPDATE_INTERVALL);
     } else if (var == "LIBTIME") {
-        return getTimeStr();
+        return ntpTime.getTimeStr();
     } else if (var == "LDRVALUE") {
         return String(ldrSensor.getLdrValue());
     } else if (var == "LDRISDARK") {
