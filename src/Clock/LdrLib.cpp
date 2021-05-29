@@ -4,20 +4,32 @@
 */
 
 #include "LdrLib.h"
-
 #include "Arduino.h"
 
+#include <numeric>
+
+static const int AVERAGE_VALUE_REPETITION_COUNT = 10;
+static const int HYSTERESIS_DIFFERENCE = 5;
+
 LdrLib::LdrLib(uint8_t pin, uint16_t threshold) 
-    : _pin(pin), _threshold(threshold) {
+    : _pin(pin), _threshold(threshold), _dark(false) {
 }
 
 bool LdrLib::isDark() {
-    int sensorValue = analogRead(_pin);  // read analog input pin 0
-    return (sensorValue < _threshold);
+    int sensorValue = getAnalogValue();  // read analog input pin 0
+
+    if(sensorValue < _threshold) {
+        _dark = true;
+    }
+    if(sensorValue > (_threshold + HYSTERESIS_DIFFERENCE)) {
+        _dark = false;
+    }
+
+    return _dark;
 }
 
 int LdrLib::getLdrValue() {
-    return analogRead(_pin);
+    return getAnalogValue();
 }
 
 void LdrLib::setTreshold(uint16_t threshold) {
@@ -25,10 +37,19 @@ void LdrLib::setTreshold(uint16_t threshold) {
 }
 
 void LdrLib::printSerialLog() {
-    int sensorValue = analogRead(_pin);  // read analog input pin 0
+    int sensorValue = getAnalogValue();  // read analog input pin 0
 
     Serial.print("LDR: ");
     Serial.print(sensorValue, DEC);
     Serial.print(" => isDark: ");
     Serial.println(isDark());
+}
+
+int LdrLib::getAnalogValue() {
+    uint16_t value = 0;
+    for(int i=0; i < AVERAGE_VALUE_REPETITION_COUNT; ++i) {
+        delayMicroseconds(1);
+        value += analogRead(_pin);
+    }
+    return value / 10;
 }

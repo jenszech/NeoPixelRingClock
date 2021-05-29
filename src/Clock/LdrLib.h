@@ -7,6 +7,7 @@
 #define LdrLib_h
 
 #include "Arduino.h"
+#include <deque>
 
 class LdrLib {
    public:
@@ -17,8 +18,10 @@ class LdrLib {
     void setTreshold(uint16_t threshold);
 
    private:
+    int getAnalogValue();
     uint8_t _pin;
     uint16_t _threshold;
+    bool _dark;
 };
 
 #endif
