@@ -54,6 +54,11 @@ long lastLogMillis = 0;
 void loop() {
     currentMillis = millis();
     //Update NeoPixel Display
+    if(!ldrSensor.isDark()) {
+        auto conv = map(ldrSensor.getLdrValue(), 0, 1024, 50, 255);
+        Serial.println(conv);
+        neoPixel.setBrightness(conv);
+    }
     neoPixel.loopPixelUpdate(ldrSensor.isDark());
 
     //Debug Output every 60sec.
@@ -69,7 +74,7 @@ void loop() {
 }
 
 //-----------------------------------------------------------------------------
-// NTP Methods
+// WIFI Methods
 //-----------------------------------------------------------------------------
 
 // Establish a WiFi connection with your router
