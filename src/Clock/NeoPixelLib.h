@@ -20,9 +20,9 @@ class NeoPixelLib {
     Adafruit_NeoPixel pixels;
     bool _isDark;
     void showClockSegments();
-    void showHourPixel(int hourNow);
-    void showMinutePixel(int minuteNow);
-    void showSecondPixel(int secondNow);
+    void showHourPixel(time_t time);
+    void showMinutePixel(time_t time);
+    void showSecondPixel(time_t time);
 };
 
 #endif

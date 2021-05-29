@@ -54,9 +54,9 @@ void NeoPixelLib::loopPixelUpdate(bool isDarkMode) {
     showClockSegments();
 
     // Now print all the elements of the time
-    showHourPixel(hour(t));
-    showMinutePixel(minute(t));
-    showSecondPixel(second(t));
+    showHourPixel(t);
+    showMinutePixel(t);
+    showSecondPixel(t);
     pixels.show();  // Send the updated pixel colors to the hardware.
 }
 
@@ -72,14 +72,15 @@ void NeoPixelLib::showClockSegments() {
     }
 }
 
-void NeoPixelLib::showHourPixel(int hourNow) {
-    int hourL, hourR;
-    while (hourNow > 11) {
-        hourNow = hourNow - 12;
-    }
-    hourNow = (hourNow * 5) + (hourNow / 12);
+void NeoPixelLib::showHourPixel(time_t time) {
+    int hourL = 0, hourR = 0;
+    int hourNow = hourFormat12(time);
+    int minuteNow = minute(time);
+
+    hourNow = (hourNow * 5) + (hourNow / 12) + (minuteNow / 12);
     hourL = hourNow - 1;
     hourR = hourNow + 1;
+    
     if (hourR == 60)
         hourR = 0;
     if (hourL == -1)
@@ -90,12 +91,12 @@ void NeoPixelLib::showHourPixel(int hourNow) {
     pixels.setPixelColor(hourR, COLORS[_isDark][I_HLR]);
 }
 
-void NeoPixelLib::showMinutePixel(int minuteNow) {
-    pixels.setPixelColor(minuteNow, COLORS[_isDark][I_M]);
+void NeoPixelLib::showMinutePixel(time_t time) {
+    pixels.setPixelColor(minute(time), COLORS[_isDark][I_M]);
 }
 
-void NeoPixelLib::showSecondPixel(int secondNow) {
+void NeoPixelLib::showSecondPixel(time_t time) {
     if (!_isDark) {
-        pixels.setPixelColor(secondNow, COLORS[_isDark][I_S]);
+        pixels.setPixelColor(second(time), COLORS[_isDark][I_S]);
     }
 }
