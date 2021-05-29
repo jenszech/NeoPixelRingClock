@@ -56,7 +56,6 @@ void loop() {
     //Update NeoPixel Display
     if(!ldrSensor.isDark()) {
         auto conv = map(ldrSensor.getLdrValue(), 0, 1024, 50, 255);
-        Serial.println(conv);
         neoPixel.setBrightness(conv);
     }
     neoPixel.loopPixelUpdate(ldrSensor.isDark());
