@@ -32,6 +32,7 @@ const uint32_t COLORS[2][5] = {
         ((uint32_t)0 << 16) | ((uint32_t)1 << 8) | 0   //color for hour marker Left/Right
     }};
 
+
 NeoPixelLib::NeoPixelLib(uint16_t numPixel, uint8_t pin)
     : pixels(numPixel, pin, NEO_GRB + NEO_KHZ800) {
 }
@@ -40,7 +41,11 @@ void NeoPixelLib::setupNeoPixel() {
     pixels.begin();  // INITIALIZE NeoPixel strip object (REQUIRED)
 }
 
-void NeoPixelLib::loopPixelUpdate(bool isDarkMode) {
+void NeoPixelLib::setBrightness(uint8_t level) {
+    pixels.setBrightness(level);
+}
+
+void NeoPixelLib::loopPixelUpdate(bool isDarkMode) { 
     _isDark = isDarkMode;
     time_t t = now();
     pixels.clear();  // Set all pixel colors to 'off'

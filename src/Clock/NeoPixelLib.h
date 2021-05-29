@@ -14,6 +14,7 @@ class NeoPixelLib {
     NeoPixelLib(uint16_t numPixel, uint8_t pin);
     void setupNeoPixel();
     void loopPixelUpdate(bool isDarkMode);
+    void setBrightness(uint8_t level);
 
    private:
     Adafruit_NeoPixel pixels;
