@@ -173,7 +173,7 @@ String indexKeyProcessor(const String& var) {
 void setupOTA() {
     Serial.printf("Sketch size: %u\n", ESP.getSketchSize());
     Serial.printf("Free size: %u\n", ESP.getFreeSketchSpace());
-    ArduinoOTA.setHostname("myPixelClock");
+    ArduinoOTA.setHostname(_myMDNSHostName);
     ArduinoOTA.begin();
 }
 

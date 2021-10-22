@@ -3,6 +3,8 @@
 #define _mySsid     "<YOUR WLAN SSID>"
 #define _myPassword "<YOUR WLAN Password>"
 
+#define _myMDNSHostName "<YOUR MDNS Hostname>" //Webinterface is reachable via "<YOUR MDNS Hostname>.local"
+
 // NeoPixel defines
 #define _PIXEL_PIN 4
 #define _PIXEL_NUM 60 // Popular NeoPixel ring size
