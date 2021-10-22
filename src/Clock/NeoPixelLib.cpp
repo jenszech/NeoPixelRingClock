@@ -19,7 +19,7 @@ const int I_HLR = 4;
 const uint32_t COLORS[2][5] = {
     {
         ((uint32_t)20 << 16) | ((uint32_t)20 << 8) | 20,  //color for clock segments
-        ((uint32_t)0 << 16) | ((uint32_t)10 << 8) | 0,    //color for second marker
+        ((uint32_t)50 << 16) | ((uint32_t)0 << 8) | 0,    //color for second marker
         ((uint32_t)0 << 16) | ((uint32_t)50 << 8) | 0,    //color for minute marker
         ((uint32_t)0 << 16) | ((uint32_t)25 << 8) | 0,    //color for hour marker
         ((uint32_t)0 << 16) | ((uint32_t)5 << 8) | 0      //color for hour marker Left/Right
@@ -34,21 +34,21 @@ const uint32_t COLORS[2][5] = {
 
 
 NeoPixelLib::NeoPixelLib(uint16_t numPixel, uint8_t pin)
-    : pixels(numPixel, pin, NEO_GRB + NEO_KHZ800) {
+    : m_pixels(numPixel, pin, NEO_GRB + NEO_KHZ800) {
 }
 
 void NeoPixelLib::setupNeoPixel() {
-    pixels.begin();  // INITIALIZE NeoPixel strip object (REQUIRED)
+    m_pixels.begin();  // INITIALIZE NeoPixel strip object (REQUIRED)
 }
 
 void NeoPixelLib::setBrightness(uint8_t level) {
-    pixels.setBrightness(level);
+    m_pixels.setBrightness(level);
 }
 
 void NeoPixelLib::loopPixelUpdate(bool isDarkMode) { 
-    _isDark = isDarkMode;
+    m_isDark = isDarkMode;
     time_t t = now();
-    pixels.clear();  // Set all pixel colors to 'off'
+    m_pixels.clear();  // Set all pixel colors to 'off'
 
     // Setup static clock elements
     showClockSegments();
@@ -57,18 +57,18 @@ void NeoPixelLib::loopPixelUpdate(bool isDarkMode) {
     showHourPixel(t);
     showMinutePixel(t);
     showSecondPixel(t);
-    pixels.show();  // Send the updated pixel colors to the hardware.
+    m_pixels.show();  // Send the updated pixel colors to the hardware.
 }
 
 //-- PRIVATE FUNCTIONS ------------------------------------------
 void NeoPixelLib::showClockSegments() {
-    if (!_isDark) {
+    if (!m_isDark) {
         for (int b = 0; b < 12; b++) {
-            pixels.setPixelColor(b * 5, COLORS[0][I_CLOCK]);
+            m_pixels.setPixelColor(b * 5, COLORS[0][I_CLOCK]);
         }
     }
     for (int b = 0; b < 4; b++) {
-        pixels.setPixelColor(b * 15, COLORS[_isDark][I_CLOCK]);
+        m_pixels.setPixelColor(b * 15, COLORS[m_isDark][I_CLOCK]);
     }
 }
 
@@ -81,22 +81,24 @@ void NeoPixelLib::showHourPixel(time_t time) {
     hourL = hourNow - 1;
     hourR = hourNow + 1;
     
-    if (hourR == 60)
+    if (hourR == 60) {
         hourR = 0;
-    if (hourL == -1)
+    }
+    if (hourL == -1) {
         hourL = 59;
+    }
 
-    pixels.setPixelColor(hourL, COLORS[_isDark][I_HLR]);
-    pixels.setPixelColor(hourNow, COLORS[_isDark][I_H]);
-    pixels.setPixelColor(hourR, COLORS[_isDark][I_HLR]);
+    m_pixels.setPixelColor(hourL, COLORS[m_isDark][I_HLR]);
+    m_pixels.setPixelColor(hourNow, COLORS[m_isDark][I_H]);
+    m_pixels.setPixelColor(hourR, COLORS[m_isDark][I_HLR]);
 }
 
 void NeoPixelLib::showMinutePixel(time_t time) {
-    pixels.setPixelColor(minute(time), COLORS[_isDark][I_M]);
+    m_pixels.setPixelColor(minute(time), COLORS[m_isDark][I_M]);
 }
 
 void NeoPixelLib::showSecondPixel(time_t time) {
-    if (!_isDark) {
-        pixels.setPixelColor(second(time), COLORS[_isDark][I_S]);
+    if (!m_isDark) {
+        m_pixels.setPixelColor(second(time), COLORS[m_isDark][I_S]);
     }
 }

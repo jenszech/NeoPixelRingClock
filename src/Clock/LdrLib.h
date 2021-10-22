@@ -19,9 +19,9 @@ class LdrLib {
 
    private:
     int getAnalogValue();
-    uint8_t _pin;
-    uint16_t _threshold;
-    bool _dark;
+    uint8_t m_pin;
+    uint16_t m_threshold;
+    bool m_dark;
 };
 
 #endif

@@ -17,8 +17,8 @@ class NeoPixelLib {
     void setBrightness(uint8_t level);
 
    private:
-    Adafruit_NeoPixel pixels;
-    bool _isDark;
+    Adafruit_NeoPixel m_pixels;
+    bool m_isDark;
     void showClockSegments();
     void showHourPixel(time_t time);
     void showMinutePixel(time_t time);

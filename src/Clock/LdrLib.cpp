@@ -12,20 +12,20 @@ static const int AVERAGE_VALUE_REPETITION_COUNT = 10;
 static const int HYSTERESIS_DIFFERENCE = 5;
 
 LdrLib::LdrLib(uint8_t pin, uint16_t threshold) 
-    : _pin(pin), _threshold(threshold), _dark(false) {
+    : m_pin(pin), m_threshold(threshold), m_dark(false) {
 }
 
 bool LdrLib::isDark() {
     int sensorValue = getAnalogValue();  // read analog input pin 0
 
-    if(sensorValue < _threshold) {
-        _dark = true;
+    if(sensorValue < m_threshold) {
+        m_dark = true;
     }
-    if(sensorValue > (_threshold + HYSTERESIS_DIFFERENCE)) {
-        _dark = false;
+    if(sensorValue > (m_threshold + HYSTERESIS_DIFFERENCE)) {
+        m_dark = false;
     }
 
-    return _dark;
+    return m_dark;
 }
 
 int LdrLib::getLdrValue() {
@@ -33,7 +33,7 @@ int LdrLib::getLdrValue() {
 }
 
 void LdrLib::setTreshold(uint16_t threshold) {
-    _threshold = threshold;
+    m_threshold = threshold;
 }
 
 void LdrLib::printSerialLog() {
@@ -49,7 +49,7 @@ int LdrLib::getAnalogValue() {
     uint16_t value = 0;
     for(int i=0; i < AVERAGE_VALUE_REPETITION_COUNT; ++i) {
         delayMicroseconds(1);
-        value += analogRead(_pin);
+        value += analogRead(m_pin);
     }
     return value / 10;
 }

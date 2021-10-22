@@ -23,8 +23,8 @@ class NtpTimeLib {
   private:
     NTPClient timeClient;
 
-    uint16_t _resyncSeconds;
-    uint16_t _updateIntervall;
+    uint16_t m_resyncSeconds;
+    uint16_t m_updateIntervall;
 
     String printDigits(int digits);
     static time_t getNtpTime();

@@ -15,16 +15,16 @@ namespace {
 }
 
 NtpTimeLib::NtpTimeLib(uint16_t timeOffset, uint16_t resyncSeconds, uint16_t updateInterval, WiFiUDP& ntpUDP)
-    : timeClient(ntpUDP, timeOffset), _resyncSeconds(resyncSeconds), _updateIntervall(updateInterval){
+    : timeClient(ntpUDP, timeOffset), m_resyncSeconds(resyncSeconds), m_updateIntervall(updateInterval){
 
     timeClientPtr = &this->timeClient;
 }
 
 void NtpTimeLib::setupNTP() {
-    timeClient.setUpdateInterval(_updateIntervall);
+    timeClient.setUpdateInterval(m_updateIntervall);
     timeClient.update();
     setSyncProvider(&NtpTimeLib::getNtpTime);
-    setSyncInterval(_resyncSeconds);  // just for demo purposes!
+    setSyncInterval(m_resyncSeconds);  // just for demo purposes!
     printSerialLog();
 }
 
