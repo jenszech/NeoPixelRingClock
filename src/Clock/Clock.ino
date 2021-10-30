@@ -18,23 +18,18 @@
 #include <TimeLib.h>
 #include <WiFiUdp.h>
 
-// Include WebServer Lib
-#include <ESP8266WebServer.h>
-#include <FS.h>  // muss vor <detail\RequestHandlersImpl.h> stehen (s. Hinweis im Anschluss)
-#include <EspHtmlTemplateProcessor.h>
-
 #include "NeoPixelLib.h"
 #include "LdrLib.h"
 #include "NtpTimeLib.h"
+#include "Webserver.h"
 
 WiFiUDP ntpUDP;
-ESP8266WebServer webserver(80);
-EspHtmlTemplateProcessor templateProcessor(&webserver);
 
 //-----------------------------------------------------------------------------
 // MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN   MAIN
 //-----------------------------------------------------------------------------
 
+Webserver web;
 NeoPixelLib neoPixel(_PIXEL_NUM, _PIXEL_PIN);
 LdrLib ldrSensor(_LDR_PIN,  _LDR_TRESHOLD);
 NtpTimeLib ntpTime(_NTP_OFFSET, _NTP_RSYNC, _NTP_UPDATE_INTERVAL, ntpUDP);
@@ -45,7 +40,7 @@ void setup() {
     setupOTA();
     ntpTime.setupNTP();
     neoPixel.setupNeoPixel();
-    setupWebServer();
+    web.initialize();
 }
 
 long currentMillis = 0;
@@ -67,7 +62,7 @@ void loop() {
         ldrSensor.printSerialLog();
     }
 
-    loopWebServer();
+    web.loopWebServer();
     loopOTA();
     delay(_PIXEL_UPDATE_INTERVAL);  // Pause before next pass through loop
 }
@@ -99,72 +94,6 @@ void connectToWifi() {
 
     Serial.print("\nWiFi connected with (local) IP address of: ");
     Serial.println(WiFi.localIP());
-}
-
-//-----------------------------------------------------------------------------
-// WebServer Methods
-//-----------------------------------------------------------------------------
-// Create a new web server
-void setupWebServer() {
-    // Initialize file system.
-    if (!SPIFFS.begin()) {
-        Serial.println("SPIFFS nicht initialisiert!");
-        while (1) {
-            yield();
-        }
-    }
-    Serial.println("SPIFFS ok");
-
-    // Start Web Server
-    webserver.on("/", handleRootIndex);
-    webserver.on("/config.html", handleRootConfig);
-    //webserver.serveStatic("/", SPIFFS, "/index.html");
-    webserver.serveStatic("/config.html", SPIFFS, "/config.html");
-    webserver.onNotFound(notfoundPage);
-    webserver.begin();
-}
-
-// Handle 404
-void notfoundPage() {
-    Serial.println("GET not found");
-    webserver.send(404, "text/plain", "404: Not found");
-}
-
-// Listen for HTTP requests
-void loopWebServer(void) {
-    webserver.handleClient();
-}
-
-void handleRootIndex() {
-    templateProcessor.processAndSend("/index.html", indexKeyProcessor);
-}
-void handleRootConfig() {
-    templateProcessor.processAndSend("/config.html", indexKeyProcessor);
-}
-
-String indexKeyProcessor(const String& var) {
-    Serial.println(var);
-    if (var == "CLOCK") {
-        return ntpTime.getTimeStr();
-    } else if (var == "SSID") {
-        return WiFi.SSID();
-    } else if (var == "WLAN") {
-        return "online";
-    } else if (var == "NTPTIME") {
-        return ntpTime.getNtpRawTimeStr();
-    } else if (var == "NTPOFFSET") {
-        return String(_NTP_OFFSET);
-    } else if (var == "NTPUPDATE") {
-        return String(_NTP_UPDATE_INTERVAL);
-    } else if (var == "LIBTIME") {
-        return ntpTime.getTimeStr();
-    } else if (var == "LDRVALUE") {
-        return String(ldrSensor.getLdrValue());
-    } else if (var == "LDRISDARK") {
-        return String(ldrSensor.isDark());
-    } else if (var == "LDRTRESHHOLD") {
-        return String(_LDR_TRESHOLD);
-    }
 }
 
 //-----------------------------------------------------------------------------
