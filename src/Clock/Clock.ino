@@ -32,7 +32,7 @@ WiFiUDP ntpUDP;
 Webserver web;
 NeoPixelLib neoPixel(_PIXEL_NUM, _PIXEL_PIN);
 LdrLib ldrSensor(_LDR_PIN,  _LDR_TRESHOLD);
-NtpTimeLib ntpTime(_NTP_OFFSET, _NTP_RSYNC, _NTP_UPDATE_INTERVAL, ntpUDP);
+NtpTimeLib ntpTime(_NTP_RSYNC, _NTP_UPDATE_INTERVAL, ntpUDP);
 
 void setup() {
     Serial.begin(115200);

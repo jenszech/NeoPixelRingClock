@@ -9,19 +9,21 @@
 #include <NTPClient.h>
 #include <TimeLib.h>
 #include <WiFiUdp.h>
+#include <Timezone.h>
 
 #include "Arduino.h"
 
 class NtpTimeLib {
   public:
-    NtpTimeLib(uint16_t timeOffset, uint16_t resyncSeconds, uint16_t updateIntervall, WiFiUDP& ntpUDP);
+    NtpTimeLib(uint16_t resyncSeconds, uint16_t updateIntervall, WiFiUDP& ntpUDP);
     void setupNTP();
     String getTimeStr();
     String getNtpRawTimeStr();
     void printSerialLog();
     
   private:
-    NTPClient timeClient;
+    NTPClient m_timeClient;
+    Timezone m_tzConverter;
 
     uint16_t m_resyncSeconds;
     uint16_t m_updateIntervall;

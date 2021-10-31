@@ -12,17 +12,23 @@
 
 namespace {
     NTPClient* timeClientPtr = nullptr;
+    Timezone* tzConverterPtr = nullptr;
+
+    //Definition of time change rules and its offsets from UTC
+    const TimeChangeRule CEST = {"CEST", Last, Sun, Mar, 2, 120};     // Central European Summer Time
+    const TimeChangeRule CET  = {"CET ", Last, Sun, Oct, 3, 60};      // Central European Standard Time
 }
 
-NtpTimeLib::NtpTimeLib(uint16_t timeOffset, uint16_t resyncSeconds, uint16_t updateInterval, WiFiUDP& ntpUDP)
-    : timeClient(ntpUDP, timeOffset), m_resyncSeconds(resyncSeconds), m_updateIntervall(updateInterval){
+NtpTimeLib::NtpTimeLib(uint16_t resyncSeconds, uint16_t updateInterval, WiFiUDP& ntpUDP)
+    : m_timeClient(ntpUDP), m_tzConverter(CEST, CET), m_resyncSeconds(resyncSeconds), m_updateIntervall(updateInterval){
 
-    timeClientPtr = &this->timeClient;
+    timeClientPtr = &this->m_timeClient;
+    tzConverterPtr = &this->m_tzConverter;
 }
 
 void NtpTimeLib::setupNTP() {
-    timeClient.setUpdateInterval(m_updateIntervall);
-    timeClient.update();
+    m_timeClient.setUpdateInterval(m_updateIntervall);
+    m_timeClient.update();
     setSyncProvider(&NtpTimeLib::getNtpTime);
     setSyncInterval(m_resyncSeconds);  // just for demo purposes!
     printSerialLog();
@@ -48,12 +54,12 @@ String NtpTimeLib::getTimeStr() {
 }
 
 String NtpTimeLib::getNtpRawTimeStr() {
-    return timeClient.getFormattedTime();
+    return m_timeClient.getFormattedTime();
 }
 
 void NtpTimeLib::printSerialLog() {
     Serial.print("NTP Time: ");
-    Serial.println(timeClient.getFormattedTime());
+    Serial.println(m_timeClient.getFormattedTime());
     Serial.print("TimeLib: ");
     Serial.println(getTimeStr());
 }
@@ -61,7 +67,7 @@ void NtpTimeLib::printSerialLog() {
 // resync Method - get Time from NTPClient
 time_t NtpTimeLib::getNtpTime() {
     Serial.println("TimeLib resync");
-    return timeClientPtr->getEpochTime();
+    return tzConverterPtr->toLocal(timeClientPtr->getEpochTime());
 }
 
 //-- PRIVATE FUNCTIONS ------------------------------------------
