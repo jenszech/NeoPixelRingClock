@@ -18,10 +18,11 @@
 #include <TimeLib.h>
 #include <WiFiUdp.h>
 
-#include "NeoPixelLib.h"
 #include "LdrLib.h"
 #include "NtpTimeLib.h"
 #include "Webserver.h"
+
+#include "Clock.h"
 
 WiFiUDP ntpUDP;
 
@@ -30,7 +31,7 @@ WiFiUDP ntpUDP;
 //-----------------------------------------------------------------------------
 
 Webserver web;
-NeoPixelLib neoPixel(_PIXEL_NUM, _PIXEL_PIN);
+Clock neoClock(_PIXEL_NUM, _PIXEL_PIN);
 LdrLib ldrSensor(_LDR_PIN,  _LDR_TRESHOLD);
 NtpTimeLib ntpTime(_NTP_RSYNC, _NTP_UPDATE_INTERVAL, ntpUDP);
 
@@ -39,33 +40,16 @@ void setup() {
     connectToWifi();
     setupOTA();
     ntpTime.setupNTP();
-    neoPixel.setupNeoPixel();
+    neoClock.initialize();
     web.initialize();
 }
 
-long currentMillis = 0;
-long lastLogMillis = 0;
-
 void loop() {
-    currentMillis = millis();
-    //Update NeoPixel Display
-    if(!ldrSensor.isDark()) {
-        auto conv = map(ldrSensor.getLdrValue(), 0, 1024, 50, 255);
-        neoPixel.setBrightness(conv);
-    }
-    neoPixel.loopPixelUpdate(ldrSensor.isDark());
-
-    //Debug Output every 60sec.
-    if (currentMillis - lastLogMillis > 60000) {
-        lastLogMillis = millis();
-        ntpTime.printSerialLog();
-        ldrSensor.printSerialLog();
-    }
-
+    neoClock.updateLoop();
     web.loopWebServer();
     loopOTA();
-    delay(_PIXEL_UPDATE_INTERVAL);  // Pause before next pass through loop
 }
+
 
 //-----------------------------------------------------------------------------
 // WIFI Methods
