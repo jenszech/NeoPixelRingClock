@@ -71,9 +71,14 @@ Color Pixel::getFadedColorValue(uint8_t crossfade, Color const &from, Color cons
     auto redDst = to.getRed();
     auto greenDst = to.getGreen();
     auto blueDst = to.getBlue();
-    auto red = redSrc + ((redDst - redSrc) * crossfade / 256);
-    auto green = greenSrc + ((greenDst - greenSrc) * crossfade / 256);
-    auto blue = blueSrc + ((blueDst - blueSrc) * crossfade / 256);
+    auto red = interpolate(redSrc, redDst, crossfade);
+    auto green = interpolate(greenSrc, greenDst, crossfade);
+    auto blue = interpolate(blueSrc, blueDst, crossfade);
 
     return Color(red, green, blue);
+}
+
+int Pixel::interpolate(uint8_t startValue, uint8_t endValue, uint8_t stepNumber)
+{
+    return (endValue - startValue) * stepNumber / 255 + startValue;
 }

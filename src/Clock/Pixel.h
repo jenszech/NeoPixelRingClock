@@ -36,6 +36,7 @@ private:
     uint8_t m_fadeValue = 0;
 
     static Color getFadedColorValue(uint8_t crossfade, Color const &from, Color const& to);
+    static int interpolate(uint8_t startValue, uint8_t endValue, uint8_t stepNumber);
 };
 
 #endif //Pixel_h
