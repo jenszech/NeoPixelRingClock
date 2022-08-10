@@ -55,7 +55,7 @@ void Clock::updateLoop()
 
 void Clock::updateHour(time_t timestamp)
 {
-  uint8_t curHour = hour(timestamp);
+  uint8_t curHour = hourFormat12(timestamp);
   uint8_t curMin = minute(timestamp);
 
   curHour = (curHour * 5) + (curHour / 12) + (curMin / 12);
@@ -64,6 +64,9 @@ void Clock::updateHour(time_t timestamp)
       m_previousHour = curHour;
   }
   m_pixelManager.setPixelColor(m_hoursColor, curHour);
+
+  m_pixelManager.setPixelColor(m_hoursColor, curHour-1);
+  m_pixelManager.setPixelColor(m_hoursColor, curHour+1);
 }
 
 void Clock::updateMinute(time_t timestamp)
