@@ -1,9 +1,53 @@
 # Roadmap
+
 ## Geplante Features
-* Einstellen einer Alarmzeit
-* Die Alarmzeit wird durch eine rote Markierung zusätzlich zur Uhrzeit anzeigt
-* Rest / HTML API zum steuern / einstellen der Uhr per Smartphone
-* ~~Dokumentation per Fritzing Hardware Beispiel~~
+* Uhr Basic Funktion
+    * Überblenden optimieren
+    * BUG: Sekunden & Minutenzeigen überlappung
+    * BUG: All Seconds On
+    * Anzeige Alarmzeit
+        Die Alarmzeit wird durch eine rote Markierung zusätzlich zur Uhrzeit anzeigt
+* Zeitzonen
+    * Zeitzonen handling / Lib replacment
+    * Zeitzonenerkennung (Automatische Sommer / Winterzeit)
+    * Automatisches setzen der Zeitzone (GeoLocation)
+* Konfigurations Management
+    * Farben Konfigurierbar machen
+    * Alarm Sound konfigurieren
+    * WLAN bei ersten Boot initialisieren
+    * Hell / Dunkelmodus Konfigurierbar (SleepMode, NightMode)
+* Hardware Erweiterung
+    * Drehgeber Integration
+    * Display Imtegration
+    * Buzzer Integration (Alarm, Taster)
+    * MP3 Modul & Lautsprecher
+    * Integration Helligkeitssensor
+* Webserver Integration
+    * WebServer für Config
+    * WebServer zur Alarmverwaltung
+    * MobilFirst Design der Webseite
+* Sound
+    * Tastertöne beim Einstellen
+    * Individuelle AlarmSounds
+* Helligkeitssensor
+    * Konfigurierbarer SleepMode
+    * Konfigurierbarer NightMode
+    * Alarm per Lichtsensor / Bewegung deaktivieren
+* Drehgeber
+    * Einstellen einer Alarmzeit
+    * Aktivieren / Deaktivieren eines Alarms
+    * Starten einer StopUhr
+* Zusatzfunktionen
+    * Andere Uhrzeit Modi: 24h / 
+    * Timer / Countdown Clock
+    * StopUhr
+* OTA wieder aktivieren
+* Dokumentation
+    * Bauanleitung
+    * Platinenlayout
+    * ProjektSetup & Deploy
+    * Nutzungsanleitung
+    * Bestellliste
 
 ## Changelog
 
