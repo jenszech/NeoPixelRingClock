@@ -1,81 +1,110 @@
 /*
-  Pixel.h - 
+  Pixel.h -
   Created by Florian Adam, 2021-12-29.
 */
 
 #include "Pixel.h"
 
 Pixel::Pixel()
-: m_status(PixelStatus::STATIC_COLOR)
+    : m_status(PixelStatus::STATIC_COLOR)
 {
-
 }
 
-Pixel::~Pixel() 
+Pixel::~Pixel()
 {
-
 }
 
-Pixel::Pixel(Color const &defaultColor) 
-: m_defaultColor(defaultColor), m_status(PixelStatus::STATIC_COLOR), m_fadeValue(0)
+Pixel::Pixel(Color const &defaultColor)
+    : m_status(PixelStatus::STATIC_COLOR), m_fadeValue(0)
 {
+    m_colors[ColorLayer::BOTTOM] = defaultColor;
     m_sourceColor = defaultColor;
+    m_currentColor = defaultColor;
     m_destinationColor = defaultColor;
 }
 
-void Pixel::setColor(Color const &newColor)
+void Pixel::setColor(ColorLayer const layer, Color const &newColor)
 {
-    if(m_destinationColor != newColor) {
-        m_sourceColor = m_destinationColor;
-        m_destinationColor = newColor;
+    if (ColorLayer::BOTTOM != layer)
+    {
+        m_colors[layer] = newColor;
+        updateDestinationColorValue();
+
         m_fadeValue = 0;
         m_status = PixelStatus::FADING;
     }
 }
 
-void Pixel::setDefaultColor()
+void Pixel::resetLayer(ColorLayer const layer)
 {
-    m_sourceColor = m_destinationColor;
-    m_destinationColor = m_defaultColor;
-    m_fadeValue = 0;
-    m_status = PixelStatus::FADING;
+    if (ColorLayer::BOTTOM != layer)
+    {
+        if (m_colors.erase(layer))
+        {
+            m_fadeValue = 0;
+            m_status = PixelStatus::FADING;
+        }
+        updateDestinationColorValue();
+    }
 }
 
 Color Pixel::colorValueLoop()
 {
-    switch (m_status)
+    if (PixelStatus::FADING == m_status)
     {
-        case PixelStatus::STATIC_COLOR:
-            return m_destinationColor;
-        case PixelStatus::FADING:
-        {   
-            m_fadeValue++;
-            if(m_fadeValue >= 254) {
-                m_status = PixelStatus::STATIC_COLOR;
-                m_sourceColor = m_destinationColor;
-                return m_destinationColor;
-            }
-            return getFadedColorValue(m_fadeValue, m_sourceColor, m_destinationColor);
-        }
-        default:
+        m_fadeValue++;
+        if (m_fadeValue >= 254)
+        {
             m_status = PixelStatus::STATIC_COLOR;
-            return m_destinationColor;
+            m_sourceColor = m_destinationColor;
+            m_currentColor = m_destinationColor;
+        }
+        else
+        {
+            updateCurrentColorValue();
+        }
     }
+
+    return m_currentColor;
 }
 
-Color Pixel::getFadedColorValue(uint8_t crossfade, Color const &from, Color const& to)
+void Pixel::updateDestinationColorValue()
 {
-    auto redSrc = from.getRed();
-    auto greenSrc = from.getGreen();
-    auto blueSrc = from.getBlue();
-    auto redDst = to.getRed();
-    auto greenDst = to.getGreen();
-    auto blueDst = to.getBlue();
-    auto red = interpolate(redSrc, redDst, crossfade);
-    auto green = interpolate(greenSrc, greenDst, crossfade);
-    auto blue = interpolate(blueSrc, blueDst, crossfade);
 
-    return Color(red, green, blue);
+    Color::ColorPartType red = 0;
+    Color::ColorPartType green = 0;
+    Color::ColorPartType blue = 0;
+    for (auto colorLayer : m_colors)
+    {
+        red += colorLayer.second.getRed();
+        green += colorLayer.second.getGreen();
+        blue += colorLayer.second.getBlue();
+    }
+
+    if (m_colors.size())
+    {
+        red = red / m_colors.size();
+        blue = blue / m_colors.size();
+        green = green / m_colors.size();
+    }
+
+    m_sourceColor = m_currentColor;
+    m_destinationColor = Color(red, green, blue);
+}
+
+void Pixel::updateCurrentColorValue()
+{
+    auto redSrc = m_sourceColor.getRed();
+    auto greenSrc = m_sourceColor.getGreen();
+    auto blueSrc = m_sourceColor.getBlue();
+    auto redDst = m_destinationColor.getRed();
+    auto greenDst = m_destinationColor.getGreen();
+    auto blueDst = m_destinationColor.getBlue();
+    auto red = interpolate(redSrc, redDst, m_fadeValue);
+    auto green = interpolate(greenSrc, greenDst, m_fadeValue);
+    auto blue = interpolate(blueSrc, blueDst, m_fadeValue);
+
+    m_currentColor = Color(red, green, blue);
 }
 
 int Pixel::interpolate(uint8_t startValue, uint8_t endValue, uint8_t stepNumber)

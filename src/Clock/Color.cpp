@@ -1,16 +1,18 @@
 /*
-  Color.h - 
+  Color.h -
   Created by Florian Adam, 2021-12-29.
 */
 
 #include "Color.h"
 
 Color::Color()
-: m_color(0x00000000)
-{}
+    : m_color(0x00000000)
+{
+}
 
 Color::~Color()
-{}
+{
+}
 
 Color::Color(ColorPartType red, ColorPartType green, ColorPartType blue)
 {
@@ -18,7 +20,7 @@ Color::Color(ColorPartType red, ColorPartType green, ColorPartType blue)
 }
 
 Color::Color(ColorIntType colorValue)
-: m_color(colorValue)
+    : m_color(colorValue)
 {
 }
 
@@ -42,12 +44,12 @@ Color::ColorPartType Color::getBlue() const
   return m_color & 0xFF;
 }
 
-bool Color::operator== (Color const &rhs)
+bool Color::operator==(Color const &rhs)
 {
   return m_color == rhs.m_color;
 }
 
-bool Color::operator!= (Color const &rhs)
+bool Color::operator!=(Color const &rhs)
 {
   return !(*this == rhs);
 }
