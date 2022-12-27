@@ -76,9 +76,13 @@ void Pixel::updateDestinationColorValue()
     Color::ColorPartType blue = 0;
     for (auto colorLayer : m_colors)
     {
-        red += colorLayer.second.getRed();
-        green += colorLayer.second.getGreen();
-        blue += colorLayer.second.getBlue();
+        //Overwrite bottom (static) color layer, but mix other layers
+        if(1 == m_colors.size() || Pixel::ColorLayer::BOTTOM != colorLayer.first)
+        {
+            red += colorLayer.second.getRed();
+            green += colorLayer.second.getGreen();
+            blue += colorLayer.second.getBlue();
+        }
     }
 
     if (m_colors.size())
